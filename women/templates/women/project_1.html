@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Проект — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --muted: #6b7280;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #eef2ff, #f3f4f6);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 80px 40px;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1400px;
+}
+
+.card {
+    background: var(--card);
+    padding: 70px;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+
+/* Layout */
+.project {
+    display: flex;
+    gap: 80px;
+    align-items: center;
+}
+
+/* БОЛЬШОЕ фото слева */
+.image-placeholder {
+    width: 600px;
+    height: 700px;
+    border-radius: 30px;
+    background: #e5e7eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--muted);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* Правая часть */
+.content {
+    flex: 1;
+}
+
+/* БОЛЬШОЙ заголовок */
+.title {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 250px;
+}
+
+/* КРУПНЫЙ текст */
+.text {
+    font-size: 20px;
+    line-height: 1.9;
+    color: #374151;
+}
+
+/* Адаптив */
+@media (max-width: 1000px) {
+    .project {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .image-placeholder {
+        width: 100%;
+        height: 400px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="card">
+        <div class="project">
+
+            <div class="image-placeholder">
+                Место для большого фото
+            </div>
+
+            <div class="content">
+                <div class="title">
+                    {{ title }}
+                </div>
+
+                <div class="text" placeholder="Здесь будет основной текст проекта.
+                Подробное описание, технологии, архитектура,
+                особенности реализации и важные детали.
+                Можно писать много текста — блок теперь
+                достаточно большой и просторный.">
+
+                {% if not value %}
+                    {{ message }}
+                {% else %}
+                    {{ value }}
+                {% endif %}
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Профиль специалиста — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --success: #16a34a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+section {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px;
+}
+
+/* PROFILE HEADER */
+.profile-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ddd;
+    overflow: hidden;
+}
+
+.profile-info h1 {
+    margin-bottom: 8px;
+}
+
+.salary {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* SKILLS */
+.skills span {
+    display: inline-block;
+    background: #eef2ff;
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin: 5px 6px 0 0;
+    font-size: 14px;
+}
+
+/* PORTFOLIO */
+.portfolio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.project {
+    background: #f3f4f6;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.project h4 {
+    margin-bottom: 6px;
+}
+
+/* HIRE BOX */
+.hire-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: #eef2ff;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* REVIEW */
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.stars input {
+    display: none;
+}
+
+.stars label {
+    font-size: 28px;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+    color: #fbbf24;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
+    resize: vertical;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+</header>
+
+<section>
+
+
+<!-- ===== REVIEW ===== -->
+<div class="card">
+    <h3>Оставить отзыв</h3>
+    <form method="POST" action="{% url 'write_reviews' %}">
+        {% csrf_token %}
+        <div class="stars">
+            <input type="radio" name="stars5" id="star5" value="5"><label for="star5">★</label>
+            <input type="radio" name="stars4" id="star4" value="4"><label for="star4">★</label>
+            <input type="radio" name="stars3" id="star3" value="3"><label for="star3">★</label>
+            <input type="radio" name="stars2" id="star2" value="2"><label for="star2">★</label>
+            <input type="radio" name="stars1" id="star1" value="1"><label for="star1">★</label>
+        </div>
+
+        <!-- Сообщение -->
+
+        <input type="text" name="for_who" placeholder="напишите для кого отзыв">
+
+        <textarea name="message" placeholder="Напишите ваш отзыв..." required></textarea>
+
+        <button type="submit" class="btn-success">Отправить отзыв</button>
+    </form>
+</div>
+
+</section>
+</body>
+</html>

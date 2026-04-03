@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пополнить баланс</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f2f4f7; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; }
+        .balance { font-size: 20px; margin-bottom: 20px; text-align: center; }
+        .amounts button { margin: 5px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        .custom-amount, .card-number { width: 100%; padding: 10px; font-size: 16px; margin-top: 10px; }
+        .submit-btn { width: 100%; padding: 12px; background: #1cbf73; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 15px; }
+        .submit-btn:hover { background: #16a063; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Пополнить баланс</h2>
+        <div class="balance">Текущий баланс: {{ balance }} $</div>
+
+        <form method="post" action="{% url 'invest_money' %}">
+            {% csrf_token %}
+
+
+            <!-- Поле для своей суммы -->
+            <input type="number" name="amount" placeholder="Своя сумма" class="custom-amount" min="1">
+
+            <!-- Поле для номера карты -->
+            <label for="card_number">Номер карты</label>
+            <input type="text" name="card_number" id="card_number" class="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+
+            <button type="submit" class="submit-btn">Пополнить</button>
+        </form>
+    </div>
+</body>
+</html>

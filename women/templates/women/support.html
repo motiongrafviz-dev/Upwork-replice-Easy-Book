@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Жалоба — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+header{
+    background:white;
+    border-bottom:1px solid var(--border);
+    padding:16px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:700;
+    color:var(--primary);
+}
+
+/* CONTAINER */
+.container{
+    max-width:700px;
+    margin:40px auto;
+    background:var(--card);
+    padding:30px;
+    border-radius:12px;
+    border:1px solid var(--border);
+}
+
+/* TITLE */
+h2{
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+input, textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+    font-size:14px;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:var(--primary);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:var(--primary-dark);
+}
+
+/* INFO BOX */
+.info{
+    background:#f3f4f6;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-size:14px;
+    color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+</header>
+
+<div class="container">
+
+<h2>Отправить жалобу</h2>
+
+<div class="info">
+    Опишите проблему максимально подробно. Наша команда рассмотрит вашу жалобу.
+</div>
+
+<form method="POST" action="{% url 'chat_freelancer' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>От кого жалоба</label>
+        <input name="from_user" type="text" placeholder="Ваш ник / имя">
+    </div>
+
+    <div class="form-group">
+        <label>На кого жалоба</label>
+        <input name="to_user" type="text" placeholder="Ник пользователя">
+    </div>
+
+    <div class="form-group">
+        <label>Текст жалобы</label>
+        <textarea name="report_text" placeholder="Опишите ситуацию..."></textarea>
+    </div>
+
+    <button class="btn">Отправить жалобу</button>
+</form>
+
+</div>
+
+</body>
+</html>

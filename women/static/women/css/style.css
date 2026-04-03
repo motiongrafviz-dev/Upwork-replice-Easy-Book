@@ -1,0 +1,105 @@
+css* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #444;
+  background: #fff;
+}
+
+/* TOP */
+.top {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: .3em;
+  color: #777;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.top p {
+  max-width: 850px;
+  line-height: 1.7;
+  color: #777;
+}
+
+/* TILES GRID */
+.tiles {
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+}
+
+/* TILE */
+.tile {
+  position: relative;
+  height: 280px;
+  text-decoration: none;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* COLORS */
+.pink { background: #e68798; }
+.blue { background: #7fc4ed; }
+.green { background: #6fb1a5; }
+
+/* CROSS LINES (как в оригинале) */
+.tile::before,
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(45deg, transparent 49%, rgba(255,255,255,.2) 50%, transparent 51%),
+    linear-gradient(-45deg, transparent 49%, rgba(255,255,255,.2) 50%, transparent 51%);
+  pointer-events: none;
+}
+
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,.75), rgba(0,0,0,.35));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: .4s ease;
+  text-align: center;
+  padding: 30px;
+}
+
+.overlay h2 {
+  letter-spacing: .3em;
+  margin-bottom: 10px;
+}
+
+.overlay p {
+  font-size: .9rem;
+  opacity: .9;
+}
+
+/* HOVER ANIMATION */
+.tile:hover .overlay {
+  opacity: 1;
+  transform: scale(1);
+}

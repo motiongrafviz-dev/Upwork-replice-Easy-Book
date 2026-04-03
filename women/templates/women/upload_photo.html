@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Профиль специалиста — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+a { text-decoration: none; color: inherit; }
+
+header {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover { background: var(--primary-dark); }
+
+select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+section {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px;
+}
+
+.profile-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.skills span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef2ff;
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin: 5px 6px 0 0;
+    font-size: 14px;
+}
+
+.skills span button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.portfolio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.project {
+    background: #e5e7eb;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.project h4 {
+    margin-bottom: 6px;
+}
+
+.add-btn {
+    margin-top: 20px;
+}
+
+/* ===== Modal ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    width: 400px;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.modal-content textarea {
+    resize: none;
+}
+
+.modal-content button {
+    width: 100%;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.chat-btn {
+    position: relative;
+}
+
+.chat-notification {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: red;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">EasyBook</div>
+
+<div class="chat-btn">
+
+
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'upload_photo' %}">
+    {% csrf_token %}
+    <input type="file" name="photoe">
+    <input name="name_photo"> название фото </input>
+    <button type="submit" class="btn-primary">Сохранить фото</button>
+</form>
+
+<div class="avatar">
+    
+        {% for photo in photos %}
+            {% if photo.image %}
+                <img src="{{ photo.image.url }}" alt="{{ photo.name }}" width="120" height="120">
+            {% endif%}
+        {% endfor %}
+    
+</div>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Поиск специалистов — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px;
+}
+
+/* ===== Tags ===== */
+.tags {
+    margin-bottom: 30px;
+}
+
+.tags button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: white;
+    margin: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tags button:hover {
+    border-color: var(--primary);
+}
+
+.tags button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* ===== Vertical Grid ===== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+/* ===== Card ===== */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.card a {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.pagination button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.send-box{
+    display:flex;
+    border-top:1px solid var(--border);
+    margin-top:10px;
+    gap:6px;
+}
+
+.send-box input{
+    flex:1;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+}
+
+.send-box button{
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    background:var(--primary);
+    color:white;
+    cursor:pointer;
+}
+
+.send-box button:hover{
+    background:var(--primary-dark);
+}
+
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+        <a href="{% url 'invest_money' %}" class="btn-primary">Пополнить счёт</a>
+        <div class="account-box">
+            <div class="account-label">💳 Баланс</div>
+            <div class="account-amount">
+                {% if amount_of_money %}
+                    $ {{ amount_of_money }}
+                {% else %}
+                    $ 0
+                {% endif %}
+            </div>
+            {{ message }}
+        </div>
+
+</header>
+
+<section>
+
+<div class="tags">
+    <button class="active">Все</button>
+    <form method="POST" action="{% url 'pythone' %}">
+        {% csrf_token %}
+        <button type="submit" >Python</button>
+    </form>
+    <form method="POST" action="{% url 'csse' %}">
+        {% csrf_token %}
+        <button type="submit" >CSS</button>
+    </form>
+    <form method="POST" action="{% url 'djangoe' %}">
+        {% csrf_token %}
+        <button type="submit" >Django</button>
+    </form>
+    <form method="POST" action="{% url 'htmle' %}">
+        {% csrf_token %}
+        <button type="submit" >HTML</button>
+    </form>
+    <form method="POST" action="{% url 'sort_by_tags' %}">
+        {% csrf_token %}
+        <button type="submit" >сортировка</button>
+    </form>
+</div>
+
+
+
+<div class="grid">
+    {% for obj in acount_info %}
+        {% for name, data in obj.acuonts.items %}
+        
+            {% if data.username_org %}
+                
+            <div class="card">
+                    {% for i in data.ava %}
+                        {% if i %}
+                            <img src="/media/{{ i }}" width="120" height="120">
+                        {% endif%}
+                    {% endfor %}
+                        {{  data.username_org.0 }} {{  data.role }} 
+                    
+                <p> salary per hour: 
+                        {{ data.salary }}$
+                </p>
+                <p> #tags#: 
+                    {% for tag in data.tags %}
+                        {{ tag }} 
+                    {% endfor %}
+                </p>
+
+                {% for title, code in data.portfolio.items %}
+                    <p> title of project:  {{ title }}</p>
+                    <p> code of the project:  {{ code }}</p>
+                {% endfor %}
+
+                <form action="{% url 'see_profile' %}" method="POST">
+                    {% csrf_token %}
+                    <button name="user" value="{{ data.username_org }}" , class="submit-btn" type="submit">смотреть профиль</button>
+                </form>
+            </div>
+            {% endif %}
+        {% endfor %} 
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    <button class="active">1</button>
+    <button>2</button>
+    <button>3</button>
+</div>
+
+</section>
+
+</body>
+</html>
