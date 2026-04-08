@@ -26,7 +26,10 @@ django = []
 html = []
 role = ""
 changing_number = 0
+roles = ""
+new_role = ''
 # information for customers
+reputation = "Normal"
 ava = []
 usernames = []
 salary = 0
@@ -67,7 +70,7 @@ def checks_who_are_you(request):
     
     return render(request, 'women/login.html',)
 
-
+ 
 
 
 def moving_you_to_window(request): 
@@ -79,21 +82,18 @@ def moving_you_to_window(request):
     u_1 = (request.POST.get('username_poll') or '').strip()
     l_1 = (request.POST.get('login_poll') or '').strip()
 
-    
-    for i in acount_info:
-        print(i)
     for i in login_info:
 
-
-        if check == "customer" and u_1 == i.username and l_1 == i.password:
+        if check == "customer" and u_1 == i.username and l_1 == i.password and check == i.role:
             
             username_2 = i.username
             print(username_2)
             for i in money:
                 i.save(update_fields=['money_invested'])
                 print(card)
+                print()
                 return render(request, "women/customer.html", {"acount_info": acount_info, "amount_of_money": i.money_invested, "MEDIA_URL": settings.MEDIA_URL})
-        elif check == "freelancer" and u_1 == i.username and l_1 == i.password:
+        elif check == "freelancer" and u_1 == i.username and l_1 == i.password and check == i.role:
             username_2 = i.username
             print(username_2)
             usernames.append(i.username)
@@ -101,10 +101,10 @@ def moving_you_to_window(request):
             for i in chat:
                 if i.message and i.user == username_2:
                     print("e", i.user, username_2, i.message)
-                    return render(request, "women/freelancer.html", {"username_2": username_2, "main": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
+                    return render(request, "women/freelancer.html", {"username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
             
-            print(card)
-            return render(request, "women/freelancer.html", {"username_2": username_2, "main": acount_info,"MEDIA_URL": settings.MEDIA_URL})
+
+           
 
     return render(request, "women/index.html")
 
@@ -120,23 +120,37 @@ def delete_msg_about_accepting_complain(request):
     for i in support_for_accepting:
         i.accepted = ""
         i.save(update_fields=['accepted'])
-    return render(request, "women/freelancer.html", {"main": acount_info,"skill_list": skill_list, "username_2": username_2, "support":support})
+    return render(request, "women/redectar_freelancer.html", {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
+
+
+
+
+def check_role(request):
+    global roles
+    q_role_1 = (request.POST.get('freelancer') or '').strip()
+    q_role_2 = (request.POST.get('client') or '').strip()
+    if q_role_1 == "freelancer_":
+        roles = "freelancer"
+    elif q_role_2 == "client_":
+        roles = "customer"
+    print(roles)
+    return render(request, "women/register.html")
+
 
 
 def register_pole(request):
-    global counte,username
+    global counte,username,roles
     login_info = Login.objects.all()
 
     q_1 = (request.POST.get('username') or '').strip()
     q_2 = (request.POST.get('password') or '').strip()
     age = (request.POST.get('age') or '').strip()
 
-    print(age)
     for i in login_info:
-        
         if i.password != q_2 and i.username != q_1:
             counte += 1
-            Login.objects.create(username=q_1, password=q_2,)
+            print("GOOD")
+            Login.objects.create(username=q_1, password=q_2,role=roles)
 
         if age:
             if int(age) < 18:
@@ -147,7 +161,7 @@ def register_pole(request):
             return render(request, 'women/index.html', {'login_info': login_info})
 
         print(counte)
-        return render(request, 'women/register.html')
+    return render(request, 'women/register.html')
 
 
 
@@ -156,7 +170,9 @@ def register_pole(request):
 
 
 def remove_tag(request):
-    global skill_list,username_2,portfoli_projects,usernames,ava
+    global skill_list,username_2,portfoli_projects,usernames,ava,reputation
+    acount_info = Saved_acc.objects.all()
+    support = Support.objects.all()
     tags_list = Tags.objects.all()
     input_delete = (request.GET.get('delete') or '').strip()
     print(skill_list)
@@ -170,15 +186,18 @@ def remove_tag(request):
             "salary": salary,
             "role": role,
             "ava": ava,
+            "reputation": reputation
                 }
             
     print(card)
-    return render(request, 'women/freelancer.html', {"skill_list": skill_list, "username_2": username_2})
+    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
 
 
 
 def add_tag(request):
-    global skill_list,username_2,portfoli_projects
+    global skill_list,username_2,portfoli_projects,reputation
+    acount_info = Saved_acc.objects.all()
+    support = Support.objects.all()
     tags_list = Tags.objects.all()
     input_add = (request.GET.get('add') or '').strip()
     for i in tags_list:
@@ -195,18 +214,19 @@ def add_tag(request):
     "salary": salary,
     "role": role,
     "ava": ava,
+    "reputation": reputation,
         }
     print(card, role)
 
 
-    return render(request, 'women/freelancer.html', {"skill_list": skill_list, "username_2": username_2})
+    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
 
 
 def portfolio(request):
     return render(request, "women/portfolio.html", {})
 
 def add_page(request):
-    global portfoli_projects,ava
+    global portfoli_projects,ava,reputation
     saved = ""
     title = (request.POST.get('title') or '').strip()
     code = (request.POST.get('code') or '').strip() 
@@ -222,6 +242,7 @@ def add_page(request):
         "salary": salary,
         "role": role,
         "ava": ava,
+        "reputation": reputation
             }
         print(card)
         print(saved)
@@ -239,9 +260,14 @@ def add_page(request):
 
 
 def staff_login(request):
-    global check
+    global check,new_role
     b1 = (request.POST.get('b1') or '').strip()
     b2 = (request.POST.get('b2') or '').strip()
+    if new_role:
+        user = Login.objects.get(username=new_role)
+        user.role = "moderator"
+        user.save()
+        new_role = ""
     if b1 == "b_1":
         check = "admin"
     elif b2 == "b_2":
@@ -253,7 +279,7 @@ def staff_login(request):
 
 
 def moving_to_staff_admin_pannel(request): 
-    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role
+    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role,new_role
     login_info = Login.objects.all()
     mod_requests = ModeratorAplication.objects.all()
     u_1 = (request.POST.get('username_poll') or '').strip()
@@ -261,11 +287,12 @@ def moving_to_staff_admin_pannel(request):
 
     
     for i in login_info:
-        if check == "admin" and u_1 == i.username and l_1 == i.password:
+        if check == i.role and u_1 == i.username and l_1 == i.password and check == "admin":
             username_2 = i.username
             return render(request, "women/admin.html", {"username_2": username_2,"mod_requests": mod_requests})
-        elif check == "moderator" and u_1 == i.username and l_1 == i.password:
+        elif check == i.role and u_1 == i.username and l_1 == i.password and check == "moderator":
             support = Support.objects.all()
+            
             username_2 = i.username
             return render(request, "women/moderator.html", {"username_2": username_2,"support": support, })
             
@@ -288,6 +315,18 @@ def moderator_application(request):
 
 
     return render(request, "women/application_for_moderator.html")
+
+
+
+def redectar_freelancer(request): 
+    global username_2
+    acount_info = Saved_acc.objects.all()
+    support = Support.objects.all()
+
+
+    return render(request, "women/redectar_freelancer.html", {"username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
+
+
 
 
 def delete_complain(request): 
@@ -313,9 +352,12 @@ def accept_complain(request):
 
 
 def accept_application(request):
+    global new_role
     moderator_application = ModeratorAplication.objects.all()
-    ide = (request.POST.get('id') or '').strip()
+    ide = (request.POST.get('idq') or '').strip()
     id = ModeratorAplication.objects.get(id=ide)  
+    new_role = id.name
+    print(new_role)
     id.accepted_moder = "accepted"
     id.save()
 
@@ -341,6 +383,42 @@ def delete_moderator(request):
     print(app.accepted_moder)
     return render(request, "women/accepted_moderators.html", {"moderator_app": moderator_applicatione})
 
+def block_client(request):
+    saved_acc = Saved_acc.objects.all()
+    client_id = (request.POST.get('client_id') or '').strip()
+    app = Saved_acc.objects.get(id=client_id)
+    app.delete()
+    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
+
+
+def add_reputation(request):
+    saved_acc = Saved_acc.objects.all()
+    client_id = (request.POST.get('client_id') or '').strip()
+    app = Saved_acc.objects.get(id=client_id)
+    for i,v in app.acuonts.items():
+        v["reputation"] = "High"
+
+    app.save()
+    print(app.acuonts)
+    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
+
+
+def punish_freelancer(request):
+    saved_acc = Saved_acc.objects.all()
+    return render(request, "women/punish_payment.html", {"saved_acc": saved_acc})
+
+def mines_money(request):
+    investemoney = InvestedMoney.objects.all()
+    punish = (request.POST.get('punish') or '').strip()
+    int_punish = int(punish)
+    for i in investemoney:
+        print(i.money_invested)
+        i.money_invested -= int_punish
+        print(i.money_invested)
+        i.save(update_fields=['money_invested'])
+    return render(request, "women/punish_payment.html", {"punish": punish,})
+
+
 
 
 def admin_panel_request_for_moderator(request):
@@ -350,6 +428,13 @@ def admin_panel_request_for_moderator(request):
 def admin_panel_request_for_accepted_moderators(request):
     moderator_applicatione = ModeratorAplication.objects.all()
     return render(request, "women/accepted_moderators.html", {"moderator_app": moderator_applicatione})
+
+def admin_panel_request_for_freelancer(request):
+    saved_acc = Saved_acc.objects.all()
+    for i in saved_acc:
+        for i,v in i.acuonts.items():
+            print(i)
+    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
 
 
 def chat_with_offender(request): 
@@ -423,7 +508,7 @@ def invest_money(request):
 
 
 def price_per_project(request):
-    global card,salary
+    global card,salary,reputation
     salary_a = (request.GET.get('salary') or '').strip()
     salary = salary_a
     card[username_2] = {
@@ -433,6 +518,7 @@ def price_per_project(request):
     "salary": salary,
     "role": role,
     "ava": ava,
+    "reputation": reputation,
         }
     return render(request, "women/portfolio.html")
     
@@ -666,11 +752,13 @@ def csse(request):
 
 
 def select_role(request):
-    global role
+    global role,skill_list,username_2
+    acount_info = Saved_acc.objects.all()
+    support = Support.objects.all()
     role_1 = (request.POST.get("role") or '').strip()
     role = role_1
     print(role)
-    return render(request, "women/freelancer.html", )    
+    return render(request, "women/redectar_freelancer.html", {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support,})    
 
 def upload_photo(request):
     global ava

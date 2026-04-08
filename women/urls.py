@@ -48,6 +48,13 @@ urlpatterns = [
     path('accept_application/', accept_application, name='accept_application'),
     path('delete_application/', delete_application, name='delete_application'),
     path('delete_moderator/', delete_moderator, name='delete_moderator'),
+    path('block_client/', block_client, name='block_client'),
     path('admin_panel_request_for_moderator/', admin_panel_request_for_moderator, name='admin_panel_request_for_moderator'),
+    path('admin_panel_request_for_freelancer/', admin_panel_request_for_freelancer, name='admin_panel_request_for_freelancer'),
+    path('add_reputation/', add_reputation, name='add_reputation'),
+    path('punish_freelancer/', punish_freelancer, name='punish_freelancer'),
+    path('mines_money/', mines_money, name='mines_money'),
+    path('check_role/', check_role, name='check_role'),
+    path('redectar_freelancer/', redectar_freelancer, name='redectar_freelancer'),
     path('admin_panel_request_for_accepted_moderators/', admin_panel_request_for_accepted_moderators, name='admin_panel_request_for_accepted_moderators'),
 ]
