@@ -158,13 +158,9 @@ header{
             {% csrf_token %}
             <button type="submit" >Заявки</button>
         </form>
-        <form method="POST", action="{% url 'admin_panel_request_for_moderator' %}">
+        <form method="POST", action="{% url 'admin_panel_request_for_freelancer' %}">
             {% csrf_token %}
             <button type="submit" >Специалисты</button>
-        </form>
-        <form method="POST", action="{% url 'admin_panel_request_for_moderator' %}">
-            {% csrf_token %}
-            <button type="submit" >Клиенты</button>
         </form>
         <form method="POST", action="{% url 'admin_panel_request_for_accepted_moderators' %}">
             {% csrf_token %}

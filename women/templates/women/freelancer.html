@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -29,8 +28,6 @@ body {
     color: var(--text);
 }
 
-a { text-decoration: none; color: inherit; }
-
 header {
     background: white;
     border-bottom: 1px solid var(--border);
@@ -52,17 +49,24 @@ header {
     padding: 10px 18px;
     border-radius: 8px;
     border: none;
-    cursor: pointer;
 }
 
-.btn-primary:hover { background: var(--primary-dark); }
-
-select {
-    padding: 8px;
-    border-radius: 8px;
+/* NEW BUTTON */
+.btn-edit {
+    background: white;
     border: 1px solid var(--border);
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+.btn-edit:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
 }
 
 section {
@@ -83,6 +87,7 @@ section {
     height: 120px;
     border-radius: 50%;
     background: #ddd;
+    overflow: hidden;
 }
 
 .card {
@@ -96,21 +101,12 @@ section {
 .skills span {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     background: #eef2ff;
     color: var(--primary);
     padding: 6px 14px;
     border-radius: 20px;
     margin: 5px 6px 0 0;
     font-size: 14px;
-}
-
-.skills span button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--primary);
-    font-weight: bold;
 }
 
 .portfolio {
@@ -128,217 +124,71 @@ section {
 .project h4 {
     margin-bottom: 6px;
 }
-
-.add-btn {
-    margin-top: 20px;
-}
-
-/* ===== Modal ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 14px;
-    width: 400px;
-}
-
-.modal-content h3 {
-    margin-bottom: 15px;
-}
-
-.modal-content input,
-.modal-content textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-.modal-content textarea {
-    resize: none;
-}
-
-.modal-content button {
-    width: 100%;
-}
-
-.btn-success {
-    background: #16a34a;
-    color: white;
-}
-
-.btn-success:hover {
-    background: #15803d;
-}
-
-.chat-btn {
-    position: relative;
-}
-
-.chat-notification {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 12px;
-    height: 12px;
-    background: red;
-    border-radius: 50%;
-    border: 2px solid white;
-}
 </style>
 </head>
 <body>
 
 <header>
 <div class="logo">EasyBook</div>
-
-<div class="chat-btn">
-
-
-
-
-
-<form method="POST" action="{% url 'enter_chat' %}">
-    {% csrf_token %}
-    <button class="btn-primary">Чат</button>
-    
-</form>
-
-{% if message %}
-<span class="chat-notification"></span>
-{% endif %}
-
-
-
-
-<form method="GET" action="{% url 'delete_msg_about_accepting_complain' %}">
-    <button type="submit">✕</button>
-</form>
-
-{% for i in support %}
-    {% if i.who_writing == username_2 %}
-
-        {{ i.accepted }}
-
-    {% endif %}
-{% endfor %}
-
-</div>
+<button class="btn-primary">Чат</button>
 </header>
 
-
-
-
 <section>
+{% for obj in acount_info %}
+    {% for name, data in obj.acuonts.items %}
+        {% if data.username_org.0 %}
+            <div class="profile-header">
 
-<div class="avatar">
+                <div class="avatar">
+                    {% for i in data.ava %}
+                        {% if i %}
+                            <img src="/media/{{ i }}" width="120" height="120">
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-</div>
+                <div>
+                    <h1>{{ data.username_org.0 }}</h1>
+                    <p style="color: var(--muted); margin-top: 6px;">
+                        {{ data.role }} разработчик
+                    </p>
+                </div>
 
-<form method="POST" action="{% url 'the_photo' %}">
-    {% csrf_token %}
-    <button class="btn-primary">сделать фото на аву</button>
-</form>
+                <!-- BUTTON -->
+                <a href="{% url 'redectar_freelancer' %}" class="btn-edit">
+                    ✏️ Редактировать
+                </a>
 
-<div>
+            </div>
 
-<h1>{{ username_2 }}</h1>
+            <div class="card">
+            </div>
 
-<form method="POST" action="{% url 'select_role' %}">
-{% csrf_token %}
+            <div class="card">
+                <h3>Навыки</h3>
+                <div class="skills">
+                    {% for skill in data.tags %}
+                        <span>{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
 
-<label>Кто вы:</label><br>
+            <div class="card">
+                <h3>Портфолио</h3>
+                <div class="portfolio">
+                    {% for i,v in data.portfolio.items %}
+                        <div class="project">
+                            <h4>{{ i }}: {{ v }}</h4>
+                            <p style="color: var(--muted); font-size: 14px;"></p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-<select name="role">
-<option value="">Выберите роль</option>
-<option name="frontend" value="Frontend">Frontend разработчик</option>
-<option name="backend" value="Backend">Backend разработчик</option>
-<option name="fullstack" value="Fullstack">Fullstack разработчик</option>
-</select>
-
-<br>
-<button type="submit" class="btn-primary">Сохранить роль</button>
-
-</form>
-
-<br>
-
-<form action="{% url 'acc_apply' %}" method="POST">
-{% csrf_token %}
-<button type="submit" class="btn-success">Подтвердить аккаунт</button>
-</form>
-
-</div>
-</div>
-
-
-<div class="card">
-<h3>Навыки</h3>
-
-<div class="skills" id="skillsContainer">
-
-{% for skill in skill_list %}
-<span>
-
-{{ skill }}
-
-<form method="GET" action="{% url 'remove_tag' %}" style="display:inline;">
-<input type="hidden" name="delete" value="{{ skill }}">
-<button type="submit">✕</button>
-</form>
-
-</span>
+        {% endif %}
+    {% endfor %}
 {% endfor %}
-
-</div>
-
-<br>
-
-<form method="GET" action="{% url 'add_tag' %}">
-<input type="text" name="add" placeholder="Добавить навык">
-<button class="btn-primary">Добавить тег</button>
-</form>
-
-</div>
-
-
-<div class="card">
-<h3>Портфолио</h3>
-
-<div class="portfolio" id="portfolioContainer"></div>
-
-<form method="POST" action="{% url 'portfolio' %}">
-{% csrf_token %}
-<button class="btn-primary add-btn">+ Добавить проект</button>
-</form>
-
-</div>
-
 </section>
-
-
-<div class="modal" id="projectModal">
-<div class="modal-content">
-
-<h3>Новый проект</h3>
-
-<input type="text" id="projectTitle" placeholder="Название проекта">
-
-<textarea id="projectDesc" placeholder="Описание проекта"></textarea>
-
-<button class="btn-primary">Сохранить проект</button>
-
-</div>
-</div>
 
 </body>
 </html>

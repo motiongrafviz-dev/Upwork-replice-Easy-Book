@@ -96,6 +96,14 @@ button.submit-btn:hover {
         <h2>Регистрация</h2>
         <p>Создайте новый аккаунт</p>
 
+
+
+        <form method="POST" action="{% url 'check_role' %}" >
+            {% csrf_token %}
+            <button name="freelancer" value="freelancer_" class="submit-btn" type="submit">Специалист</button>
+            <button name="client" value="client_" class="submit-btn" type="submit">клиент</button>
+            
+        </form>
         <form method="POST" action="{% url 'register_pole' %}">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Имя">

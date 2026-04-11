@@ -161,13 +161,9 @@ header{
             {% csrf_token %}
             <button type="submit" class="active">Заявки</button>
         </form>
-        <form method="POST", action="{% url 'admin_panel_request_for_moderator' %}">
+        <form method="POST", action="{% url 'admin_panel_request_for_freelancer' %}">
             {% csrf_token %}
             <button type="submit" >Специалисты</button>
-        </form>
-        <form method="POST", action="{% url 'admin_panel_request_for_moderator' %}">
-            {% csrf_token %}
-            <button type="submit" >Клиенты</button>
         </form>
         <form method="POST", action="{% url 'admin_panel_request_for_accepted_moderators' %}">
             {% csrf_token %}
@@ -196,7 +192,7 @@ header{
                 <div class="actions">
                     <form method="POST" action="{% url 'accept_application' %}">
                         {% csrf_token %}
-                        <input type="hidden" name="id" value="{{ i.id }}">
+                        <input type="hidden" name="idq" value="{{ i.id }}">
                         <button type="submit" class="btn btn-approve">Принять</button>
                     </form>
 
