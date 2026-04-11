@@ -9,6 +9,7 @@ class Login(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     role = models.CharField(max_length=50)
+    acceptde_role = models.CharField(max_length=50)
     def __str__(self):
         return self.username
 
@@ -41,12 +42,13 @@ class Chat(models.Model):
 
     def __str__(self):
         return f"{self.user}: {self.message}"
-    
+
     
     
 class SaveMesages(models.Model):
     messages_freelancer = models.JSONField(default=list)
     messages_client = models.JSONField(default=list)
+    
     def __str__(self):
         return f"{self.messages_freelancer}: {self.messages_client}"
     
@@ -70,7 +72,7 @@ class Reviews(models.Model):
 class PaymentSystem(models.Model):
     freelancer_name = models.CharField(max_length=100)
     clients = models.IntegerField() 
-    
+    freelancers = models.IntegerField() 
     
 
 class Support(models.Model):
@@ -84,6 +86,7 @@ class ModeratorAplication(models.Model):
     name = models.CharField(max_length=100)
     age = models.CharField(max_length=100)
     accepted_moder = models.CharField(max_length=50)
+    check_moderator = models.CharField(max_length=100)
     experience = models.CharField(max_length=100)
     reason = models.CharField(max_length=100) 
     process = models.CharField(max_length=100) 

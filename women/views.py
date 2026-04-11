@@ -28,6 +28,7 @@ role = ""
 changing_number = 0
 roles = ""
 new_role = ''
+freelancers = []
 # information for customers
 reputation = "Normal"
 ava = []
@@ -74,25 +75,44 @@ def checks_who_are_you(request):
 
 
 def moving_you_to_window(request): 
-    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role
+    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role,freelancer_cost,freelancer_name
     login_info = Login.objects.all()
     acount_info = Saved_acc.objects.all()
     support = Support.objects.all()
     money = InvestedMoney.objects.all()
+    payment = PaymentSystem.objects.all()
+    moderator_application = ModeratorAplication.objects.all()
+    
     u_1 = (request.POST.get('username_poll') or '').strip()
     l_1 = (request.POST.get('login_poll') or '').strip()
 
     for i in login_info:
 
         if check == "customer" and u_1 == i.username and l_1 == i.password and check == i.role:
-            
             username_2 = i.username
+            user = Login.objects.get(username=u_1)
+            if user.role == "moderator":
+                user.acceptde_role = "your application got accepted"
+                user.save(update_fields=['acceptde_role'])
             print(username_2)
-            for i in money:
-                i.save(update_fields=['money_invested'])
-                print(card)
-                print()
-                return render(request, "women/customer.html", {"acount_info": acount_info, "amount_of_money": i.money_invested, "MEDIA_URL": settings.MEDIA_URL})
+            for ie in payment:
+                for acc in acount_info:
+                    for key, v in acc.acuonts.items():
+                        if ie.freelancer_name == v["username_org"][0]:
+                            freelancers.append({
+                                "name": v["username_org"][0],
+                                "salary": v["salary"]
+                            })
+           
+            for ie in money:
+                try:
+                    user_name = ModeratorAplication.objects.get(name=username_2)
+                except ModeratorAplication.DoesNotExist:
+                    user_name = None
+                return render(request, "women/customer.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
+                "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
+                 "freelancers":freelancers,
+                    "login_info":login_info, "user_name": user_name})
         elif check == "freelancer" and u_1 == i.username and l_1 == i.password and check == i.role:
             username_2 = i.username
             print(username_2)
@@ -147,16 +167,17 @@ def register_pole(request):
     age = (request.POST.get('age') or '').strip()
 
     for i in login_info:
-        if i.password != q_2 and i.username != q_1:
+        if i.password != q_2 and i.username != q_1 and q_1 and q_2:
             counte += 1
             print("GOOD")
             Login.objects.create(username=q_1, password=q_2,role=roles)
+            return render(request, "women/index.html", {})
 
-        if age:
+        elif age:
             if int(age) < 18:
                 return render(request, "women/index.html", {})
     
-        if counte == 2:
+        elif counte == 2:
             counte = 0
             return render(request, 'women/index.html', {'login_info': login_info})
 
@@ -263,11 +284,6 @@ def staff_login(request):
     global check,new_role
     b1 = (request.POST.get('b1') or '').strip()
     b2 = (request.POST.get('b2') or '').strip()
-    if new_role:
-        user = Login.objects.get(username=new_role)
-        user.role = "moderator"
-        user.save()
-        new_role = ""
     if b1 == "b_1":
         check = "admin"
     elif b2 == "b_2":
@@ -315,6 +331,26 @@ def moderator_application(request):
 
 
     return render(request, "women/application_for_moderator.html")
+
+
+
+def check_moderator(request):
+    global new_role,username_2
+    moderator_application = ModeratorAplication.objects.all()
+    user = ModeratorAplication.objects.get(name=username_2)
+    print(user.accepted_moder, username_2)
+    if user.accepted_moder:
+        user_login = Login.objects.get(username=username_2)
+        user_login.role = "moderator"
+        user_login.save(update_fields=['role'])
+        return render(request, "women/index.html", )
+    return render(request, "women/customer.html", {"moderator_application": moderator_application, "user": user})
+    
+
+
+
+
+
 
 
 
@@ -839,8 +875,10 @@ def paying_system(request):
                     changing_number = 1
                     for i in paymentsystem:
                         i.clients += changing_number
+                        i.freelancers += changing_number
                         changing_number = 0
                         i.save(update_fields=['clients'])
+                        i.save(update_fields=['freelancers'])
                 else:
                     print("not nice")
         
