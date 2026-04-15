@@ -71,6 +71,7 @@ class Reviews(models.Model):
 
 class PaymentSystem(models.Model):
     freelancer_name = models.CharField(max_length=100)
+    client_name = models.CharField(max_length=100)
     clients = models.IntegerField() 
     freelancers = models.IntegerField() 
     
@@ -91,3 +92,9 @@ class ModeratorAplication(models.Model):
     reason = models.CharField(max_length=100) 
     process = models.CharField(max_length=100) 
     violation = models.CharField(max_length=100) 
+
+
+
+
+
+

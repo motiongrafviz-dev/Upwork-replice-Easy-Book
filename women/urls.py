@@ -57,5 +57,6 @@ urlpatterns = [
     path('check_role/', check_role, name='check_role'),
     path('redectar_freelancer/', redectar_freelancer, name='redectar_freelancer'),
     path('check_moderator/', check_moderator, name='check_moderator'),
+    path('searching_for_freelancers/', searching_for_freelancers, name='searching_for_freelancers'),
     path('admin_panel_request_for_accepted_moderators/', admin_panel_request_for_accepted_moderators, name='admin_panel_request_for_accepted_moderators'),
 ]
