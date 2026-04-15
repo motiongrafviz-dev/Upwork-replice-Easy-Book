@@ -153,23 +153,29 @@ section {
 
     <div class="title">👤 Пользователь</div>
     <p><strong>{{ username_2 }}</strong></p>
+    <form method="post" action="{% url 'searching_for_freelancers' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary">
+            начать искать спецеалистов
+        </button>
+    </form>
 
 </div>
 <!-- Payments -->
 <div class="card">
     <div class="title">💸 Платежи</div>
 
-    {% for f in freelancers %}
+
         <div class="payment-item">
             <div>
-                <strong>{{ f.name }}</strong><br>
+                <strong>{{ paied_freelancer.username_org.0 }}</strong><br>
                 <span>колличество нанятых людей</span>
             </div>
             <div>
-                <p>{{ f.salary }}</p>
+                <p>{{ paied_freelancer.salary }}</p>
             </div>
         </div>
-    {% endfor %}
+
 
 </div>
 

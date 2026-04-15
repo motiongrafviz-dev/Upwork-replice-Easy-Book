@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -199,45 +200,50 @@ section {
         {% csrf_token %}
         <button type="submit" >HTML</button>
     </form>
+    <form method="POST" action="{% url 'sort_by_tags' %}">
+        {% csrf_token %}
+        <button type="submit" >сортировка</button>
+    </form>
 </div>
 
 
 
 <div class="grid">
-
+    {% for obj in acount_info %}
+        {% for name, data in obj.acuonts.items %}
         
+            {% if data.username_org %}
+                
+            <div class="card">
+                    {% for i in data.ava %}
+                        {% if i %}
+                            <img src="/media/{{ i }}" width="120" height="120">
+                        {% endif%}
+                    {% endfor %}
+                       <p> reputation: {{ data.reputation }} {{  data.username_org.0 }} {{  data.role }} </p>
+                    
+                <p> salary per hour: 
+                        {{ data.salary }}$
+                </p>
+                <p> #tags#: 
+                    {% for tag in data.tags %}
+                        {{ tag }} 
+                    {% endfor %}
+                </p>
 
-    <div class="card">
-            {% for i in else %}
+                {% for title, code in data.portfolio.items %}
+                    <p> title of project:  {{ title }}</p>
+                    <p> code of the project:  {{ code }}</p>
+                {% endfor %}
 
-        {{ i.username_org.0 }}
-
-        <p>salary per hour:
-            {{ i.salary }}$
-        </p>
-
-        <p>#tags#:
-            {% for tag in i.tags %}
-                {{ tag }}
-            {% endfor %}
-        </p>
-
-        {% for title, code in i.portfolio.items %}
-            <p>title of project: {{ title }}</p>
-            <p>code of the project: {{ code }}</p>
-        {% endfor %}
-
-        <form action="{% url 'see_profile' %}" method="POST">
-            {% csrf_token %}
-            <button name="user" value="{{ i.username_org }}" class="submit-btn" type="submit">
-                смотреть профиль
-            </button>
-        </form>
-  
+                <form action="{% url 'see_profile' %}" method="POST">
+                    {% csrf_token %}
+                    <button name="user" value="{{ data.username_org }}" , class="submit-btn" type="submit">смотреть профиль</button>
+                </form>
+            </div>
+            {% endif %}
+        {% endfor %} 
     {% endfor %}
-    </div>
-
-
 </div>
 
 <div class="pagination">
@@ -250,3 +256,5 @@ section {
 
 </body>
 </html>
+
+

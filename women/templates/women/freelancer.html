@@ -136,7 +136,9 @@ section {
 <section>
 {% for obj in acount_info %}
     {% for name, data in obj.acuonts.items %}
-        {% if data.username_org.0 %}
+
+        {% if data.username_org.0 == username_2 %}
+
             <div class="profile-header">
 
                 <div class="avatar">
@@ -154,14 +156,10 @@ section {
                     </p>
                 </div>
 
-                <!-- BUTTON -->
                 <a href="{% url 'redectar_freelancer' %}" class="btn-edit">
                     ✏️ Редактировать
                 </a>
 
-            </div>
-
-            <div class="card">
             </div>
 
             <div class="card">
@@ -179,14 +177,21 @@ section {
                     {% for i,v in data.portfolio.items %}
                         <div class="project">
                             <h4>{{ i }}: {{ v }}</h4>
-                            <p style="color: var(--muted); font-size: 14px;"></p>
                         </div>
                     {% endfor %}
                 </div>
             </div>
 
         {% endif %}
+
     {% endfor %}
+{% empty %}
+
+    <p>Заполните свой профиль</p>
+    <a href="{% url 'redectar_freelancer' %}" class="btn-edit">
+        ✏️ Редактировать
+    </a>
+
 {% endfor %}
 </section>
 
