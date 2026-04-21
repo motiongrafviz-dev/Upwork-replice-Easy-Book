@@ -21,11 +21,13 @@ from coolsite import settings
 from women.views import *
 from django.urls import path, include
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('women.urls')),
-]
+from django.urls import path, include
 
+urlpatterns = [
+    path('', include('women.urls')),
+    path('clients/', include('clients_freelancers.urls')),
+    path('moderation/', include('moderation.urls')),
+]
 
 
 if settings.DEBUG:

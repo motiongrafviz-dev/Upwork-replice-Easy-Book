@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Платежи — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.account-box {
+    text-align: right;
+}
+
+.account-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.account-amount {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.btn-primary {
+    padding: 8px 14px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+section {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px;
+}
+
+/* ===== Card ===== */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* ===== Payment item ===== */
+.payment-item {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.payment-item span {
+    color: var(--muted);
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+
+    <div style="display:flex; align-items:center;">
+        <a href="{% url 'invest_money' %}" class="btn-primary">Пополнить счёт</a>
+
+        <div class="account-box">
+            <div class="account-label">💳 Баланс</div>
+            <div class="account-amount">
+                {% if amount_of_money %}
+                    $ {{ amount_of_money }}
+                {% else %}
+                    $ 0
+                {% endif %}
+            </div>
+            {{ message }}
+        </div>
+    </div>
+</header>
+
+<section>
+
+<!-- Username -->
+<div class="card">
+
+
+    {% if user_name.accepted_moder == "accepted" %}
+        <form method="post" action="{% url 'check_moderator' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">
+                Принять приглашение на модератора
+            </button>
+        </form>
+    {% endif %}
+        
+
+
+    <div class="title">👤 Пользователь</div>
+    <p><strong>{{ username_2 }}</strong></p>
+    <form method="post" action="{% url 'searching_for_freelancers' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-primary">
+            начать искать спецеалистов
+        </button>
+    </form>
+
+</div>
+<!-- Payments -->
+<div class="card">
+    <div class="title">💸 Платежи</div>
+
+
+        <div class="payment-item">
+            <div>
+                <strong>{{ paied_freelancer.username_org.0 }}</strong><br>
+                <span>колличество нанятых людей</span>
+            </div>
+            <div>
+                <p>{{ paied_freelancer.salary }}</p>
+            </div>
+        </div>
+
+
+</div>
+
+</section>
+
+</body>
+</html>

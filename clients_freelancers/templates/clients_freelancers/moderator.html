@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Модерация — EasyBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* HEADER */
+header{
+    background:white;
+    border-bottom:1px solid var(--border);
+    padding:16px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:700;
+    color:var(--primary);
+}
+
+.reports-btn{
+    padding:10px 16px;
+    background:var(--primary);
+    color:white;
+    border-radius:8px;
+    font-size:14px;
+    text-decoration:none;
+}
+
+.reports-btn:hover{
+    background:var(--primary-dark);
+}
+
+/* MAIN */
+.container{
+    max-width:900px;
+    margin:40px auto;
+    padding:20px;
+}
+
+/* CARD */
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.03);
+}
+
+/* CARD CONTENT */
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:14px;
+    color:var(--muted);
+}
+
+.card-title{
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.card-text{
+    font-size:15px;
+    line-height:1.5;
+}
+
+/* EMPTY */
+.empty{
+    text-align:center;
+    padding:80px 20px;
+    border:2px dashed var(--border);
+    border-radius:12px;
+    background:var(--card);
+    margin-top:20px;
+}
+
+.empty h2{
+    margin-bottom:10px;
+}
+
+.empty p{
+    color:var(--muted);
+}
+
+
+.actions .btn{
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-approve{
+    background: #4f46e5;
+    color:white;
+}
+
+.btn-approve:hover{
+    background: #4338ca;
+}
+
+.btn-reject{
+    background: #dc2626;
+    color:white;
+}
+
+.btn-reject:hover{
+    opacity:0.9;
+}
+
+.btn-chat{
+    background: #6b7280;
+    color:white;
+}
+
+.btn-chat:hover{
+    background: #4b5563;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+    <a href="/reports" class="reports-btn">Жалобы</a>
+</header>
+
+<div class="container">
+
+    {% if support %}
+        {% for i in support %}
+            {% if i.who_writing and i.text_of_complain and i.complain_about_who %}
+
+            <div class="card">
+                <div class="card-header">
+                    <span>От: <b>{{ i.who_writing }}</b></span>
+                    <span>На: <b>{{ i.complain_about_who }}</b></span>
+                </div>
+
+                <div class="card-title">Жалоба</div>
+
+                <div class="card-text">
+                    {{ i.text_of_complain }}
+                    {{ i.accepted }}
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="actions" style="margin-top: 15px; display: flex; gap: 10px;">
+                    <!-- Отклонить -->
+                    <form method="POST" action="{% url 'delete_complain' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="complain_id" value="{{ i.id }}">
+                        <button type="submit" class="btn btn-reject">Отклонить</button>
+                    </form>
+
+                    <!-- Сделана -->
+                    <form method="POST" action="{% url 'accept_complain' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="complain_id" value="{{ i.id }}">
+                        <button type="submit" class="btn btn-approve">Сделана</button>
+                    </form>
+
+                    <!-- Чат с нарушителем -->
+                    <a href="{% url 'chat_with_offender' %}" class="btn btn-chat">Чат с нарушителем</a>
+                </div>
+            </div>
+
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            <h2>Нет жалоб</h2>
+            <p>Когда пользователи отправят жалобы — они появятся здесь</p>
+        </div>
+    {% endif %}
+
+</div>
+
+
+</body>
+</html>

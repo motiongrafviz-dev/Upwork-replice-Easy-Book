@@ -74,89 +74,6 @@ def checks_who_are_you(request):
  
 
 
-def searching_for_freelancers(request):
-    login_info = Login.objects.all()
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    money = InvestedMoney.objects.all()
-    payment = PaymentSystem.objects.all()
-    moderator_application = ModeratorAplication.objects.all()
-    for ie in money:
-        try:
-            user_name = ModeratorAplication.objects.get(name=username_2)
-        except ModeratorAplication.DoesNotExist:
-            user_name = None
-        return render(request, "women/search_for_freelancers.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-        "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-            "freelancers":freelancers,
-            "login_info":login_info, "user_name": user_name})
-
-
-def moving_you_to_window(request): 
-    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role
-    login_info = Login.objects.all()
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    money = InvestedMoney.objects.all()
-    payment = PaymentSystem.objects.all()
-    moderator_application = ModeratorAplication.objects.all()
-    paied_freelancer = {}
-    u_1 = (request.POST.get('username_poll') or '').strip()
-    l_1 = (request.POST.get('login_poll') or '').strip()
-
-    for i in login_info:
-        if check == "customer" and u_1 == i.username and l_1 == i.password and check == i.role:
-            username_2 = i.username
-            user = Login.objects.get(username=u_1)
-            if user.role == "moderator":
-                user.acceptde_role = "your application got accepted"
-                user.save(update_fields=['acceptde_role'])
-
-            for iq in payment:
-                if iq.client_name == username_2:
-                    for ie in acount_info:
-                        for i,v in ie.acuonts.items():
-                            if i == iq.freelancer_name:
-                                paied_freelancer = v
-
-
-            for ie in money:
-                try:
-                    user_name = ModeratorAplication.objects.get(name=username_2)
-                except ModeratorAplication.DoesNotExist:
-                    user_name = None
-                print(paied_freelancer)
-                return render(request, "women/customer.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-                "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-                "freelancers":freelancers,
-                "login_info":login_info, "user_name": user_name, "paied_freelancer":paied_freelancer})
-        if check == "freelancer" and u_1 == i.username and l_1 == i.password and check == i.role:
-            username_2 = i.username
-            print(username_2)
-            usernames.append(i.username)
-            chat = Chat.objects.all()
-            return render(request, "women/freelancer.html", {"username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
-            
-
-           
-
-    return render(request, "women/index.html")
-
-
-
-
-
-def delete_msg_about_accepting_complain(request):
-    global username_2
-    support_for_accepting = Support.objects.filter(who_writing=username_2).all()
-    support = Support.objects.all()
-    acount_info = Saved_acc.objects.all()
-    for i in support_for_accepting:
-        i.accepted = ""
-        i.save(update_fields=['accepted'])
-    return render(request, "women/redectar_freelancer.html", {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
-
-
 
 
 def check_role(request):
@@ -207,7 +124,6 @@ def register_pole(request):
 def remove_tag(request):
     global skill_list,username_2,portfoli_projects,usernames,ava,reputation
     acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
     tags_list = Tags.objects.all()
     input_delete = (request.GET.get('delete') or '').strip()
     print(skill_list)
@@ -225,14 +141,13 @@ def remove_tag(request):
                 }
             
     print(card)
-    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
+    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL,})
 
 
 
 def add_tag(request):
     global skill_list,username_2,portfoli_projects,reputation
     acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
     tags_list = Tags.objects.all()
     input_add = (request.GET.get('add') or '').strip()
     for i in tags_list:
@@ -254,7 +169,7 @@ def add_tag(request):
     print(card, role)
 
 
-    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
+    return render(request, 'women/redectar_freelancer.html', {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL,})
 
 
 def portfolio(request):
@@ -308,192 +223,12 @@ def staff_login(request):
 
 
 
-def moving_to_staff_admin_pannel(request): 
-    global check,skill_list,username_2, portfoli_projects,card,salary,usernames,role,new_role
-    login_info = Login.objects.all()
-    mod_requests = ModeratorAplication.objects.all()
-    u_1 = (request.POST.get('username_poll') or '').strip()
-    l_1 = (request.POST.get('login_poll') or '').strip()
-
-    
-    for i in login_info:
-        if check == i.role and u_1 == i.username and l_1 == i.password and check == "admin":
-            username_2 = i.username
-            return render(request, "women/admin.html", {"username_2": username_2,"mod_requests": mod_requests})
-        elif check == i.role and u_1 == i.username and l_1 == i.password and check == "moderator":
-            support = Support.objects.all()
-            
-            username_2 = i.username
-            return render(request, "women/moderator.html", {"username_2": username_2,"support": support, })
-            
-
-    return render(request, "women/index.html", {})
-
-
-
-def moderator_application(request):
-    name = (request.POST.get('name') or '').strip()
-    age = (request.POST.get('age') or '').strip()
-    experience = (request.POST.get('experience') or '').strip()
-    reason = (request.POST.get('reason') or '').strip()
-    process = (request.POST.get('process') or '').strip()
-    violation = (request.POST.get('violation') or '').strip()
-
-
-
-    ModeratorAplication.objects.create(name=name, age=age,experience=experience,reason=reason,process=process,violation=violation)
-
-
-    return render(request, "women/application_for_moderator.html")
-
-
-
-def check_moderator(request):
-    global new_role,username_2
-    moderator_application = ModeratorAplication.objects.all()
-    user = ModeratorAplication.objects.get(name=username_2)
-    print(user.accepted_moder, username_2)
-    if user.accepted_moder:
-        user_login = Login.objects.get(username=username_2)
-        user_login.role = "moderator"
-        user_login.save(update_fields=['role'])
-        return render(request, "women/index.html", )
-    return render(request, "women/customer.html", {"moderator_application": moderator_application, "user": user})
-    
 
 
 
 
 
 
-
-
-def redectar_freelancer(request): 
-    global username_2
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-
-
-    return render(request, "women/redectar_freelancer.html", {"username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support})
-
-
-
-
-def delete_complain(request): 
-    support = Support.objects.all()
-    ide = (request.POST.get('complain_id') or '').strip()
-    c = Support.objects.get(id=ide)  
-    c.delete()
-
-    return render(request, "women/moderator.html", {"support": support,})
-
-
-
-
-def accept_complain(request): 
-    support = Support.objects.all()
-    ide = (request.POST.get('complain_id') or '').strip()
-    id = Support.objects.get(id=ide)  
-    id.accepted = "accepted"
-    id.delete()
-    id.save()
-    return render(request, "women/moderator.html", {"support": support,"id":id})
-
-
-
-def accept_application(request):
-    global new_role
-    moderator_application = ModeratorAplication.objects.all()
-    ide = (request.POST.get('idq') or '').strip()
-    id = ModeratorAplication.objects.get(id=ide)  
-    new_role = id.name
-    print(new_role)
-    id.accepted_moder = "accepted"
-    id.save()
-
-
-    return render(request, "women/accepted_moderators.html", {"moderator_app": moderator_application})
-
-
-def delete_application(request):
-    moderator_applicatione = ModeratorAplication.objects.all()
-    ide = (request.POST.get('ide') or '').strip()
-    app = ModeratorAplication.objects.get(id=ide)
-    app.delete()
-    return render(request, "women/admin.html", {"mod_requests": moderator_applicatione})
-
-
-def delete_moderator(request):
-    moderator_applicatione = ModeratorAplication.objects.all()
-    ide = (request.POST.get('ide') or '').strip()
-    app = ModeratorAplication.objects.get(id=ide)
-    app.accepted_moder = ""
-    print(app.accepted_moder)
-    app.save()
-    print(app.accepted_moder)
-    return render(request, "women/accepted_moderators.html", {"moderator_app": moderator_applicatione})
-
-def block_client(request):
-    saved_acc = Saved_acc.objects.all()
-    client_id = (request.POST.get('client_id') or '').strip()
-    app = Saved_acc.objects.get(id=client_id)
-    app.delete()
-    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
-
-
-def add_reputation(request):
-    saved_acc = Saved_acc.objects.all()
-    client_id = (request.POST.get('client_id') or '').strip()
-    app = Saved_acc.objects.get(id=client_id)
-    for i,v in app.acuonts.items():
-        v["reputation"] = "High"
-
-    app.save()
-    print(app.acuonts)
-    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
-
-
-def punish_freelancer(request):
-    saved_acc = Saved_acc.objects.all()
-    return render(request, "women/punish_payment.html", {"saved_acc": saved_acc})
-
-def mines_money(request):
-    investemoney = InvestedMoney.objects.all()
-    punish = (request.POST.get('punish') or '').strip()
-    int_punish = int(punish)
-    for i in investemoney:
-        print(i.money_invested)
-        i.money_invested -= int_punish
-        print(i.money_invested)
-        i.save(update_fields=['money_invested'])
-    return render(request, "women/punish_payment.html", {"punish": punish,})
-
-
-
-
-def admin_panel_request_for_moderator(request):
-    moderator_applicatione = ModeratorAplication.objects.all()
-    return render(request, "women/admin.html", {"mod_requests": moderator_applicatione})
-
-def admin_panel_request_for_accepted_moderators(request):
-    moderator_applicatione = ModeratorAplication.objects.all()
-    return render(request, "women/accepted_moderators.html", {"moderator_app": moderator_applicatione})
-
-def admin_panel_request_for_freelancer(request):
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for i,v in i.acuonts.items():
-            print(i)
-    return render(request, "women/freelancer_admin_pannel.html", {"saved_acc": saved_acc})
-
-
-def chat_with_offender(request): 
-    global name_of_client
-    support = Support.objects.all()
-    for i in support:
-        if name_of_client == i.complain_about_who:
-            return redirect('enter_chat_2')
-    return render(request, "women/moderator.html", {"support": support})
 
 
 def project_1(request):
@@ -531,43 +266,6 @@ def acc_apply(request):
     return render(request, "women/index.html")
     
     
-    
-def invest_money(request):
-    money = InvestedMoney.objects.all()
-    amount = (request.POST.get('amount') or '').strip()
-    card_number = (request.POST.get('card_number') or '').strip()
-    if amount and card_number:
-        amount = int(amount)
-        card_number = int(card_number)
-        for i in money:
-            print(i.money, amount)
-            print(i.card_number, card_number)
-            if amount > i.money:
-                return render(request, "women/customer.html", {"message": "you don,t have enough money"})
-            elif card_number != i.card_number:
-                return render(request, "women/customer.html", {"message": "card number is wrong"})
-            if i.card_number == card_number and amount <= i.money:
-                i.money -= amount
-                i.save(update_fields=['money'])
-                i.money_invested = amount
-                i.save(update_fields=['money_invested'])
-                login_info = Login.objects.all()
-                acount_info = Saved_acc.objects.all()
-                support = Support.objects.all()
-                money = InvestedMoney.objects.all()
-                payment = PaymentSystem.objects.all()
-                moderator_application = ModeratorAplication.objects.all()
-                for ie in money:
-                    try:
-                        user_name = ModeratorAplication.objects.get(name=username_2)
-                    except ModeratorAplication.DoesNotExist:
-                        user_name = None
-                        return render(request, "women/search_for_freelancers.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-                        "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-                            "freelancers":freelancers,
-                            "login_info":login_info, "user_name": user_name})
-
-    return render(request, "women/add_money.html")
     
     
 
@@ -656,29 +354,6 @@ def enter_chat(request):
 
 
 
-    
-def chat_freelancer(request):
-    global username_2,freelancer_data_chat,user
-    chat = Chat.objects.all()
-    support = Support.objects.all()
-
-    messages = (request.POST.get("message") or '').strip()
-    freelancer_data_chat.append(messages)
-
-    for ie in chat:
-        ie.messages[username_2] = freelancer_data_chat
-        ie.save(update_fields=['messages'])
-        if "support" in freelancer_data_chat:
-            from_user = (request.POST.get("from_user") or '').strip()
-            to_user = (request.POST.get("to_user") or '').strip()
-            report_text = (request.POST.get("report_text") or '').strip()
-            print(from_user, to_user,report_text)
-            Support.objects.create(text_of_complain=report_text, who_writing=from_user,complain_about_who=to_user)
-            return render(request, "women/support.html", {"support": support})
-        return render(request, "women/chat.html", {"messages_from_freelancer": chat, "freelancer_name": username_2})
-    return render(request, "women/chat.html",{"messages_from_freelancer": chat, "freelancer_name": username_2})
-
-
 
 def save_messages(request):
     global freelancer_data_chat
@@ -697,265 +372,26 @@ def save_messages(request):
 
 
 
-    
-def chat_customer(request):
-    global username_2,customers_data_chat
-    chat = Chat.objects.all()
-    messages = (request.POST.get("message") or '').strip()
-    customers_data_chat.append(messages)
-
-    for ie in chat:
-        ie.messages[username_2] = customers_data_chat
-        ie.save(update_fields=['messages'])
-        print(user)
-        for i in customers_data_chat:
-            print(i)
-            if "Pay" in i:
-                customers_data_chat.remove("Pay")
-                acount_info = Saved_acc.objects.all()
-                for i in acount_info:
-                    for name,data in i.acuonts.items():
-                        return render(request, "women/payment.html", {"acount_info": data})
-        return render(request, "women/chat_customer.html", {"messages_client": chat, "client_name": username_2})
-    
-    return render(request, "women/chat_customer.html",{"messages_client": chat, "client_name": username_2})
+def moderator_application(request):
+    name = (request.POST.get('name') or '').strip()
+    age = (request.POST.get('age') or '').strip()
+    experience = (request.POST.get('experience') or '').strip()
+    reason = (request.POST.get('reason') or '').strip()
+    process = (request.POST.get('process') or '').strip()
+    violation = (request.POST.get('violation') or '').strip()
 
 
 
-def save_messages_2(request):
-    global customers_data_chat
-    chat = Chat.objects.all()
-    saved_messages = SaveMesages.objects.all()
-
-    for ie in saved_messages:
-        ie.messages_client = customers_data_chat
-        ie.save(update_fields=['messages_client'])
-        print(ie.messages_client)
-    return render(request, "women/portfolio.html")
-    
-    
-    
-def check_tags(request):
-    global sorted_clients
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for name, data in i.acuonts.items():
-            sorted_clients[data["username_org"][0]] = data["tags"]
-    print(sorted_clients)
-    login_info = Login.objects.all()
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    money = InvestedMoney.objects.all()
-    payment = PaymentSystem.objects.all()
-    moderator_application = ModeratorAplication.objects.all()
-    for ie in money:
-        try:
-            user_name = ModeratorAplication.objects.get(name=username_2)
-        except ModeratorAplication.DoesNotExist:
-            user_name = None
-        return render(request, "women/search_for_freelancers.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-        "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-            "freelancers":freelancers,
-            "login_info":login_info, "user_name": user_name})
-
-     
-def sort_by_tags(request):
-    global sorted_clients, python, css, django, html
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for name, data in i.acuonts.items():
-            print(data["username_org"])
-            if data.get("username_org"): 
-                sorted_clients[data["username_org"][0]] = data["tags"]
-                print(sorted_clients)
-
-                
-    for i,v in sorted_clients.items():
-        if "Python" in v:
-            python.append(i)
-        if "HTML" in v:
-            html.append(i)
-        if "CSS" in v:
-            css.append(i)
-        if "Django" in v:
-            django.append(i)
-            
-    
-    print(python, css, django,html)
-    login_info = Login.objects.all()
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    money = InvestedMoney.objects.all()
-    payment = PaymentSystem.objects.all()
-    moderator_application = ModeratorAplication.objects.all()
-    for ie in money:
-        try:
-            user_name = ModeratorAplication.objects.get(name=username_2)
-        except ModeratorAplication.DoesNotExist:
-            user_name = None
-        return render(request, "women/search_for_freelancers.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-        "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-            "freelancers":freelancers,
-            "login_info":login_info, "user_name": user_name})
-    
-def htmle(request):
-    global html
-    result = []
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for ie,v in i.acuonts.items():
-            if ie in html:
-                print(ie,v)
-                result.append(v)
-    return render(request, "women/html.html", {"else": result})
+    ModeratorAplication.objects.create(name=name, age=age,experience=experience,reason=reason,process=process,violation=violation)
 
 
-def pythone(request):
-    global python
-    result = []
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for ie,v in i.acuonts.items():
-            if ie in python:
-                print(ie,v)
-                result.append(v)
-    print(result)
-    return render(request, "women/python.html", {"else": result})
-def djangoe(request):
-    global django
-    result = []
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for ie,v in i.acuonts.items():
-            if ie in django:
-                print(ie,v)
-                result.append(v)
-    return render(request, "women/django.html", {"else": result})
-def csse(request):
-    global css
-    result = []
-    saved_acc = Saved_acc.objects.all()
-    for i in saved_acc:
-        for ie,v in i.acuonts.items():
-            if ie in css:
-                print(ie,v)
-                result.append(v)
-    return render(request, "women/css.html", {"else": result})
-
-
-
-def select_role(request):
-    global role,skill_list,username_2
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    role_1 = (request.POST.get("role") or '').strip()
-    role = role_1
-    print(role)
-    return render(request, "women/redectar_freelancer.html", {"skill_list": skill_list, "username_2": username_2, "acount_info": acount_info, "message": "brrrr", "MEDIA_URL": settings.MEDIA_URL, "support": support,})    
-
-def upload_photo(request):
-    global ava
-    photos = Photo.objects.all()
-    photo_name = request.FILES.get("photoe")
-    name_photo = request.POST.get("name_photo")
-    ava.append(f"photos/{photo_name.name}")
-    print(photo_name, name_photo)
-    return render(request, "women/upload_photo.html", {'photos': photos})
-
-def the_photo(request):
-    global ava
-    ava = []
-    photos = Photo.objects.all()
-    return render(request, "women/upload_photo.html", {"photos": photos})
-
-
-def reviews_from_customers(request):
-    return render(request, "women/reviews.html")
-
-
-import ast
-def see_profile(request):
-    global save_data,user
-    reviews = Reviews.objects.all()
-    saved_acc = Saved_acc.objects.all()
-    acount_info = Saved_acc.objects.all()
-    chat = Chat.objects.all()
-    photo = Photo.objects.all()
-    payment = PaymentSystem.objects.all()
-    name_of_freelanser = (request.POST.get("user") or '').strip()
-    real_list = ast.literal_eval(name_of_freelanser)
-    user = real_list[0]
-
-    for ie in reviews:
-        print(user, ie.freelancer)
-    
-    for i in acount_info:
-        for name,data in i.acuonts.items():
-            for i in saved_acc:
-                for name, data in i.acuonts.items():
-                    if real_list[0] in name:
-                        save_data = data
-                        return render(request, "women/profiles.html", {"data": data, "photos": photo, "acount_info": data, "chat": chat, "reviews": reviews, "usere": user, "for_who": ie.freelancer, "payment": payment})
-
-    login_info = Login.objects.all()
-    acount_info = Saved_acc.objects.all()
-    support = Support.objects.all()
-    money = InvestedMoney.objects.all()
-    payment = PaymentSystem.objects.all()
-    moderator_application = ModeratorAplication.objects.all()
-    for ie in money:
-        try:
-            user_name = ModeratorAplication.objects.get(name=username_2)
-        except ModeratorAplication.DoesNotExist:
-            user_name = None
-        return render(request, "women/search_for_freelancers.html", {"acount_info": acount_info, "amount_of_money": ie.money_invested,
-        "MEDIA_URL": settings.MEDIA_URL, "payment": payment,"username_2": username_2,
-            "freelancers":freelancers,
-            "login_info":login_info, "user_name": user_name})
-
-
-
-def write_reviews(request):
-    global username_2
-    reviews = Reviews.objects.all()
-    for_who = request.POST.get("for_who")
-    print(user, for_who)
-    messages_1 = request.POST.get("message")
-    for i in range(1,6):
-        stars_1 = request.POST.get(f"stars{i}")
-        if stars_1 and messages_1:
-            Reviews.objects.create(freelancer=for_who,user=username_2, messages=messages_1,stars=stars_1)
-                
-    return render(request, "women/reviews.html", {"reviews": reviews, "usere": user, "for_who": for_who})
+    return render(request, "women/application_for_moderator.html")
 
 
 
 
-def paying_system(request):
-    global changing_number
-    acount_info = Saved_acc.objects.all()
-    paymentsystem = PaymentSystem.objects.all()
-    freelancer_name = request.POST.get("freelancer_name")
-    card_number = request.POST.get("card_number")
-    card_number = int(card_number)
-    money = InvestedMoney.objects.all()
-    for i in acount_info:
-        for name,data in i.acuonts.items():
-            for ie in money:
-                if ie.card_number == card_number and data["username_org"][0] == freelancer_name:
-                    changing_number = 1
-                    for i in paymentsystem:
-                        i.clients += changing_number
-                        i.freelancers += changing_number
-                        changing_number = 0
-                        i.save(update_fields=['clients'])
-                        i.save(update_fields=['freelancers'])
-                else:
-                    print("not nice")
-        
 
-            return render(request, "women/payment.html", {"acount_info": data})
-    return render(request, "women/payment.html", {"acount_info": data})
+
 
 
 

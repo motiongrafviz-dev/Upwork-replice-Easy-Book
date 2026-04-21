@@ -24,14 +24,12 @@ class Saved_acc(models.Model):
         return str(self.acuonts)
 
 
-
 class InvestedMoney(models.Model):
     money = models.IntegerField()  
     money_invested = models.IntegerField()  
     card_number = models.IntegerField() 
 def __str__(self):
     return f"{self.card_number} — {self.money}$ = {self.money_invested}"
-
 
 
 
@@ -75,14 +73,6 @@ class PaymentSystem(models.Model):
     clients = models.IntegerField() 
     freelancers = models.IntegerField() 
     
-
-class Support(models.Model):
-    text_of_complain = models.CharField(max_length=250)
-    who_writing = models.CharField(max_length=50)
-    accepted = models.CharField(max_length=50)
-    complain_about_who = models.CharField(max_length=50) 
-
-
 class ModeratorAplication(models.Model):
     name = models.CharField(max_length=100)
     age = models.CharField(max_length=100)
@@ -92,9 +82,3 @@ class ModeratorAplication(models.Model):
     reason = models.CharField(max_length=100) 
     process = models.CharField(max_length=100) 
     violation = models.CharField(max_length=100) 
-
-
-
-
-
-

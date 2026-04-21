@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Красивый ввод</title>
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Карточка */
+.card {
+    background: var(--card);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Заголовок */
+.card h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+/* Инпут */
+.input-field {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 18px;
+    outline: none;
+    margin-bottom: 20px;
+    transition: 0.2s;
+}
+
+.input-field:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+}
+
+/* Кнопка */
+.btn {
+    background: var(--primary);
+    color: white;
+    font-size: 18px;
+    padding: 16px 25px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px var(--shadow);
+}
+
+/* Подсказка/текст */
+.card p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Введи на сколько Аштрофовать клиента</h1>
+    <form method="POST" action="{% url 'mines_money' %}">
+        {% csrf_token %}
+        <input name="punish" type="text" class="input-field" placeholder="напишите сумму">
+        <button type="submit" class="btn">Потвердеить</button>
+    </form>
+
+</div>
+
+</body>
+</html>

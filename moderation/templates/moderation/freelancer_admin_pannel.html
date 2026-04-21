@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Админ-панель — Клиенты</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --bg: #f9fafb;
+    --text: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --badge-bg: #eef2ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+header{
+    background:white;
+    border-bottom:1px solid var(--border);
+    padding:16px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:700;
+    color:var(--primary);
+}
+
+.admin-badge{
+    font-size:14px;
+    background: var(--badge-bg);
+    color: var(--primary);
+    padding:6px 12px;
+    border-radius:8px;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.tabs button{
+    padding:10px 20px;
+    border:1px solid var(--border);
+    background:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    transition: 0.3s;
+}
+
+.tabs button.active, .tabs button:hover{
+    background:var(--primary);
+    color:white;
+}
+
+.container{
+    max-width:900px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.card{
+    background:var(--card);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card-header{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.client-name{
+    font-weight:600;
+    font-size:16px;
+}
+
+.tags {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.tag{
+    background: var(--badge-bg);
+    color: var(--primary);
+    font-size:12px;
+    padding:3px 8px;
+    border-radius:6px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    color:white;
+    transition: 0.2s;
+}
+
+.btn-punish{ background:var(--danger); }
+.btn-punish:hover{ background:#b91c1c; }
+
+.btn-block{ background:var(--muted); }
+.btn-block:hover{ background:#4b5563; }
+
+.btn-rep{ background:var(--success); }
+.btn-rep:hover{ background:#15803d; }
+
+.empty{
+    text-align:center;
+    padding:80px 20px;
+    border:2px dashed var(--border);
+    border-radius:12px;
+    background:var(--card);
+    margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">EasyBook</div>
+    <div class="admin-badge">Админ панель</div>
+</header>
+<div class="container">
+
+    <!-- ТАБЫ -->
+    <div class="tabs">
+        <form method="POST" action="{% url 'admin_panel_request_for_moderator' %}">
+            {% csrf_token %}
+            <button type="submit">Заявки</button>
+        </form>
+        <form method="POST" action="{% url 'admin_panel_request_for_freelancer' %}">
+            {% csrf_token %}
+            <button type="submit" class="active">Специалисты</button>
+        </form>
+        <form method="POST" action="{% url 'admin_panel_request_for_accepted_moderators' %}">
+            {% csrf_token %}
+            <button type="submit">Модераторы</button>
+        </form>
+    </div>
+
+    <!-- ===== КЛИЕНТЫ ===== -->
+    {% if saved_acc %}
+        {% for client in saved_acc %}
+            {% if client %}
+            <div class="card">
+                <div class="card-header">
+                    {% for key, value in client.acuonts.items %}
+                        
+                            <div class="client-name">reputation: {{ value.reputation }}  </div>
+                            Name: {{ value.username_org.0 }}-{{ value.role }}
+                            <p>salary per hour: {{ value.salary }} </p>
+                            <div class="tags"> 
+                                {% for i in value.tags %}
+                                    <div class="tag">{{ i }}</div>
+                                {% endfor %}
+                            </div>
+                            {% for ie in value.portfolio %}
+                                {{ie}}
+                            {% endfor %}
+                    
+                    {% endfor %}
+                </div>
+
+                <div class="actions">
+                    <form method="POST" action="{% url 'punish_freelancer' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="client_id" value="{{ client.id }}">
+                        <button class="btn btn-punish">Аштрофовать</button>
+                    </form>
+
+                    <form method="POST" action="{% url 'block_client' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="client_id" value="{{ client.id }}">
+                        <button class="btn btn-block">Заблокировать</button>
+                    </form>
+
+                    <form method="POST" action="{% url 'add_reputation' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="client_id" value="{{ client.id }}">
+                        <button class="btn btn-rep">Повысить репутацию</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            <h2>Нет клиентов</h2>
+            <p>Когда добавятся клиенты — они появятся здесь</p>
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
